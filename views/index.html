@@ -12,7 +12,6 @@
 
             // 监听来自同一聊天组其他人的聊天信息
             socket.on('others_msg', function(data, callback) {
-                // add to ul
                 var name = data.nickname;
                 var msg = data.msg;
                 console.log('recieved message from ' + name + ' msg: ' + msg);
@@ -20,7 +19,7 @@
                 $('#chatRecord')
                     .append('<li><a href="#">' + name + ': ' + msg + '</a></li>')
                     .listview('refresh');
-
+                
                 check_length();
             });
 
@@ -29,14 +28,10 @@
                 var text = $('#msg').val();
 
                 socket.emit('my_msg', text, function(fromServer) {
-                    if (fromServer == 'NoGroupError') {
-                        // alert('未加入任何聊天组');
-                    } else {
-                        $('#chatRecord')
-                            .append('<li><a href="#">' + nickname + ': ' + text + '</a></li>')
-                            .listview('refresh');
-                    }
-
+                    $('#chatRecord')
+                        .append('<li><a href="#">' + nickname + ': ' + text + '</a></li>')
+                        .listview('refresh');
+                    $('#msg').val("");
                     check_length();
                 });
             }
@@ -46,60 +41,14 @@
                     $('#chatRecord').children()[0].remove();
                 }
             }
-
-            function setNickname() {
-                var nickname = $('#nickname').val();
-                console.log(nickname);
-                if (isNicknameEmpty(nickname)) {
-                    alert('空名字啊同学！');
-                } else {
-                    socket.emit('setNickname', nickname, function(fromServer) {
-                        if (fromServer == 'EmptyNicknameError') {
-                            // do nothing;
-                        } else {
-                            console.log('设置成功，3s后跳转');
-                            setTimeout(function() {
-                                $.mobile.pageContainer.pagecontainer("change", "#homePage");
-                            }, 3000);
-                        }
-                    });
-                }
-            }
-
-            // check nickname is valid or not
-            function isNicknameEmpty(nickname) {
-                for (var i = 0; i < nickname.length; i++) {
-                    if (nickname[i] != " ") {
-                        return false;
-                    }
-                }
-
-                return true;
-            }
         </script>
     </head>
     
     <body>
-        <!-- 登录页 -->
-        <!-- <div data-role="page" id="loginPage">
-            <div data-role="header">
-                <a href="#homePage" data-icon="home" class="ui-btn-right">强势围观</a>
-                <h1>先设置个昵称吧～～</h1>
-            </div>
-
-            <div role="main" class="ui-content">
-                <label for="nickname">Nickname: </label>
-                <input type="text" id="nickname" name="nickname">
-
-                <input type="button" value="确定" onclick="setNickname()">
-            </div>
-        </div> -->
-
         <!-- 主界面 -->
         <div data-role="page" id="homePage">
             <div data-role="header">
                 <h1>WebChat</h1>
-                <!-- <a href="#settingsPage" data-icon="user">设置</a> -->
             </div>
 
             <ul id="chatRecord" data-role="listview" data-scroll="true">
@@ -109,20 +58,5 @@
             <input type="text" id="msg" />
             <input type="button" value="发送" onclick="sendToServer()" /> <br />
         </div>  
-
-        <!-- 设置 -->
-        <div data-role="page" id="settingsPage">
-            <div data-role="header">
-                <a href="#homePage" data-icon="back">返回</a>
-                <h1>个人设置</h1>
-            </div>
-
-            <div role="main" class="ui-content">
-                <label for="nickname">Nickname: </label>
-                <input type="text" id="nickname" name="nickname">
-
-                <input type="button" value="确定" onclick="setNickname()">
-            </div>
-        </div>
-    </body>
+  </body>
 </html>
