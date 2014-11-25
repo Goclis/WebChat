@@ -67,9 +67,8 @@ server_socket.on('connection', function (client_socket) {
     client_socket.nickname = nickname_list[timestamp % 4] + ' ' + Math.round(timestamp / 1000000);
     client_list.push(client_socket);
 
-    client_socket.on('my_msg', function (msg, callback) {
+    client_socket.on('my_msg', function (msg) {
         broadcast(msg, client_socket);
-        callback('ok');
     });
 
     client_socket.on('disconnect', function () {
