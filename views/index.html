@@ -5,34 +5,45 @@
         <script src="/static/jquery-1.8.3.min.js"></script>
         <script src="/static/jquery.mobile-1.3.2.min.js"></script>
 
-        <script type="text/javascript" src="/socket.io/socket.io.js"></script>
         <script type="text/javascript">
             var nickname = "我";
-            var socket = io.connect('http://localhost:3000');
 
-            // 监听来自同一聊天组其他人的聊天信息
-            socket.on('others_msg', function(data, callback) {
-                var name = data.nickname;
-                var msg = data.msg;
-                console.log('recieved message from ' + name + ' msg: ' + msg);
+            function polling () {
+                var polling_id = setInterval(function () {
+                    $.ajax('/get', {
+                        dataType: 'json',
+                        success: function (data) {
+                            data.forEach(function (element, index, array) {
+                                $('#chatRecord')
+                                    .append('<li><a href="#">' + element.id + ': ' + element.msg + '</a></li>')
+                                    .listview('refresh');
 
-                $('#chatRecord')
-                    .append('<li><a href="#">' + name + ': ' + msg + '</a></li>')
-                    .listview('refresh');
-                
-                check_length();
-            });
+                                check_length();
+                            });
+                        },
+                        error: function () {
+                            console.log('cancel timer');
+                            clearInterval(polling_id);
+                        }
+                    })
+                }, 1000);
+            }
 
             // 向当前聊天组内发送信息
             function sendToServer() {
                 var text = $('#msg').val();
+                $.ajax('/send', {
+                    data: {
+                        'msg': text
+                    },
 
-                socket.emit('my_msg', text, function(fromServer) {
-                    $('#chatRecord')
-                        .append('<li><a href="#">' + nickname + ': ' + text + '</a></li>')
-                        .listview('refresh');
-                    $('#msg').val("");
-                    check_length();
+                    success: function () {
+                        $('#chatRecord')
+                            .append('<li><a href="#">' + nickname + ': ' + text + '</a></li>')
+                            .listview('refresh');
+                        $('#msg').val("");
+                        check_length();
+                    }
                 });
             }
 
@@ -41,6 +52,8 @@
                     $('#chatRecord').children()[0].remove();
                 }
             }
+
+            polling();
         </script>
     </head>
     
