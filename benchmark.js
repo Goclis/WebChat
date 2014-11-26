@@ -4,21 +4,29 @@ var client_cookies = [];
 
 var len = 100;
 
+var host = "http://localhost:3000";
+
+var index_url = host;
+var send_url = host + "/send";
+var get_url = host + "/get";
+
+var interval_ms = 100;
+
 for (var i = 0; i < len; ++i) {
-	request('http://localhost:3000', function (err, res, body) {
+	request(index_url, function (err, res, body) {
 		if (!err && res.statusCode == 200) {
 			client_cookies.push('id=' + res.headers['set-cookie'][0].split(';')[0].substr(3));
 
 			if (client_cookies.length === len) {
-				console.log(client_cookies);
+				// console.log(client_cookies);
 
 
 				setInterval(function () {
-					console.log('Go....!!!');
+					// console.log('Go....!!!');
 
 					// one send.
 					request({
-						url: 'http://localhost:3000/send',
+						url: send_url,
 						method: 'GET',
 						headers: {
 							'Cookie': client_cookies[0]
@@ -35,7 +43,7 @@ for (var i = 0; i < len; ++i) {
 						(function () {
 							var k = i;
 							request({
-								url: 'http://localhost:3000/get',
+								url: get_url,
 								method: 'GET',
 								headers: {
 									'Cookie': client_cookies[k]
