@@ -1,6 +1,6 @@
 WebChat
 =======
-This is the polling-version, just for comparation with websocket.
+This is the polling-version, just for comparing with websocket.
 
 
 ```
