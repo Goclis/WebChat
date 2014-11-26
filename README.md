@@ -1,5 +1,10 @@
 WebChat
 =======
+Two version
+
+- websocket version (master branch, sometimes an independent branch)
+- polling version (polling-version branch)
+
 
 ```
 npm install
