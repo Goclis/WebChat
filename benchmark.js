@@ -4,9 +4,13 @@ var client_sockets = [];
 
 var len = 100;
 
+var interval_ms = 100;
+
+var url = "http://localhost:3000";
+
 for (var i = 0; i < len; ++i) {
 	(function () {
-		var socket = io.connect('http://localhost:3000', {'force new connection': true});
+		var socket = io.connect(url, {'force new connection': true});
 		socket.on('connect', function () {
 
 			client_sockets.push(socket);
@@ -17,7 +21,7 @@ for (var i = 0; i < len; ++i) {
 
 				setInterval(function () {
 					client_sockets[0].emit('my_msg', '');
-				}, 100);
+				}, interval_ms);
 			}
 		});
 
