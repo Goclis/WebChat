@@ -27,13 +27,12 @@
             function sendToServer() {
                 var text = $('#msg').val();
 
-                socket.emit('my_msg', text, function(fromServer) {
-                    $('#chatRecord')
-                        .append('<li><a href="#">' + nickname + ': ' + text + '</a></li>')
-                        .listview('refresh');
-                    $('#msg').val("");
-                    check_length();
-                });
+                socket.emit('my_msg', text);
+                $('#chatRecord')
+                    .append('<li><a href="#">' + nickname + ': ' + text + '</a></li>')
+                    .listview('refresh');
+                $('#msg').val("");
+                check_length();
             }
 
             function check_length() {
