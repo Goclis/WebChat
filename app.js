@@ -59,12 +59,9 @@ function route (pathname, req, res) {
 var server_socket = io.listen(server);
 server.listen(3000);
 
-
 var client_list = [];
-var nickname_list = ['A', 'B', 'C', 'D'];
 server_socket.on('connection', function (client_socket) {
-    var timestamp = new Date().getTime();
-    client_socket.nickname = nickname_list[timestamp % 4] + ' ' + Math.round(timestamp / 1000000);
+    client_socket.nickname = new Date().getTime();
     client_list.push(client_socket);
 
     client_socket.on('my_msg', function (msg) {
